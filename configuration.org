@@ -1,0 +1,432 @@
+* Packages
+
+** Company
+
+#+BEGIN_SRC emacs-lisp
+(use-package company
+    :ensure t
+    :config
+    (setq company-idle-delay 0)
+    (setq minimum-prefix-length 1)
+    (global-company-mode 1)
+    (add-hook 'shell-mode-hook (lambda () ('company-mode -1))))
+#+END_SRC 
+
+*** Company-jedi
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-jedi
+:ensure t
+:config
+(add-to-list 'company-backends 'company-jedi))
+#+END_SRC 
+
+*** Company-web
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-web
+:ensure t
+:config 
+(add-to-list 'company-backends 'company-web-html))
+#+END_SRC 
+
+*** Company-tern
+
+#+BEGIN_SRC emacs-lisp
+(use-package company-tern
+:ensure t
+:config
+(add-to-list 'company-backends 'company-tern)
+(add-hook 'js2-mode-hook (lambda () (tern-mode) (company-mode))))
+#+END_SRC 
+
+** Emmet-mode 
+
+[[https://github.com/smihica/emmet-mode][Docs]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package emmet-mode
+:ensure t
+:config 
+(add-hook 'web-mode-hook 'emmet-mode)
+(add-hook 'js2-mode-hook 'emmet-mode))
+#+END_SRC 
+
+** Evil mode 
+
+#+BEGIN_SRC emacs-lisp
+(require 'evil)
+(evil-mode t)
+(setq evil-search-module 'evil-search)
+#+END_SRC 
+
+** Evil surround
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+#+END_SRC 
+
+** Flycheck
+
+[[https://www.flycheck.org/en/latest/user/quickstart.html][Docs]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package flycheck
+:ensure t
+:config
+(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'python-mode-hook 'flycheck-mode)
+(flycheck-add-mode 'javascript-eslint 'js2-mode))
+#+END_SRC 
+
+** General
+Enabling packages
+
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . 
+				    "http://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+
+(setq package-enable-at-startup nil)
+(package-initialize)
+#+END_SRC 
+
+** Helm
+
+#+BEGIN_SRC emacs-lisp
+(use-package helm
+  :ensure t)
+(helm-mode 1)
+(add-hook 'shell-mode-hook 'helm-mode 0)
+#+END_SRC 
+
+** Hungry-delete
+
+#+BEGIN_SRC emacs-lisp
+(use-package hungry-delete
+:ensure t
+:config
+(global-hungry-delete-mode))
+#+END_SRC 
+
+** js2-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package js2-mode
+:ensure t)
+;; commenting out to use rjsx-mode instead
+;;:config
+;;(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+#+END_SRC 
+
+** Latex-preview-pane
+
+#+BEGIN_SRC emacs-lisp
+(use-package latex-preview-pane
+:ensure t
+:config
+(latex-preview-pane-enable))
+#+END_SRC 
+
+** Linum
+
+#+BEGIN_SRC emacs-lisp
+  (use-package linum-relative 
+  :ensure t
+  :config 
+  (linum-on)
+  (linum-relative-global-mode)
+  (setq linum-relative-current-symbol "")
+  (add-hook 'eshell-mode-hook 'linum-mode nil))
+#+END_SRC 
+
+** Magit
+
+[[https://github.com/magit/magit/wiki/Cheatsheet][Cheatsheet]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :ensure t)
+#+END_SRC 
+
+** Powerline
+
+#+BEGIN_SRC emacs-lisp
+(use-package powerline
+  :ensure t)
+(require 'powerline)
+(powerline-default-theme)
+#+END_SRC 
+
+** Projectile 
+
+#+BEGIN_SRC emacs-lisp
+(use-package projectile
+  :ensure t
+  :config
+(projectile-mode +1))
+#+END_SRC 
+
+** Rainbow-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-mode
+:ensure t
+:config
+(add-hook 'web-mode-hook 'rainbow-mode))
+#+END_SRC 
+
+** rjsx-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package rjsx-mode
+:ensure t
+:config 
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode)))
+#+END_SRC 
+
+** Treemacs
+
+#+BEGIN_SRC emacs-lisp
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-collapse-dirs                 (if (treemacs--find-python3) 3 0)
+          treemacs-deferred-git-apply-delay      0.5
+          treemacs-display-in-side-window        t
+          treemacs-eldoc-display                 t
+          treemacs-file-event-delay              5000
+          treemacs-file-follow-delay             0.2
+          treemacs-follow-after-init             t
+          treemacs-git-command-pipe              ""
+          treemacs-goto-tag-strategy             'refetch-index
+          treemacs-indentation                   2
+          treemacs-indentation-string            " "
+          treemacs-is-never-other-window         nil
+          treemacs-max-git-entries               5000
+          treemacs-missing-project-action        'ask
+          treemacs-no-png-images                 nil
+          treemacs-no-delete-other-windows       t
+          treemacs-project-follow-cleanup        nil
+          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+          treemacs-position                      'left
+          treemacs-recenter-distance             0.1
+          treemacs-recenter-after-file-follow    nil
+          treemacs-recenter-after-tag-follow     nil
+          treemacs-recenter-after-project-jump   'always
+          treemacs-recenter-after-project-expand 'on-distance
+          treemacs-show-cursor                   nil
+          treemacs-show-hidden-files             t
+          treemacs-silent-filewatch              nil
+          treemacs-silent-refresh                nil
+          treemacs-sorting                       'alphabetic-desc
+          treemacs-space-between-root-nodes      t
+          treemacs-tag-follow-cleanup            t
+          treemacs-tag-follow-delay              1.5
+          treemacs-width                         35)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null (treemacs--find-python3))))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil
+  :after treemacs evil
+  :ensure t)
+
+(use-package treemacs-projectile
+  :after treemacs projectile
+  :ensure t)
+
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+#+END_SRC 
+
+** Use-package
+
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+#+END_SRC 
+
+** Web-mode 
+
+#+BEGIN_SRC emacs-lisp
+(use-package web-mode
+:ensure t)
+#+END_SRC 
+
+** YASnippet 
+   
+[[http://joaotavora.github.io/yasnippet/snippet-development.html][Docs]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package yasnippet
+:ensure t)
+(require 'yasnippet)
+(yas-global-mode 1)
+#+END_SRC 
+
+* Org
+
+** Bullets
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+   :ensure t
+   :config 
+(require 'org-bullets)
+(add-hook 'org-mode-hook 'org-bullets-mode))
+#+END_SRC
+   
+* Preferences
+
+** Turn off alarms
+
+#+BEGIN_SRC emacs-lisp
+(setq ring-bell-function 'ignore)
+#+END_SRC 
+
+** Scroll conservatively 
+
+#+BEGIN_SRC emacs-lisp
+(setq scroll-step 1
+      scroll-conservatively 10000)
+#+END_SRC 
+
+** Set temp file directory
+
+#+BEGIN_SRC emacs-lisp
+;; Make sure these are backticks, not single quotes
+
+(setq backup-directory-alist
+    `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+    `((".*" ,temporary-file-directory t)))
+#+END_SRC 
+
+** Visual line mode
+
+#+BEGIN_SRC emacs-lisp
+(global-visual-line-mode 1) 
+#+END_SRC 
+
+** Delete by moving to trash
+
+#+BEGIN_SRC emacs-lisp
+(setq delete-by-moving-to-trash t)
+#+END_SRC 
+
+** Ipython as python shell
+
+#+BEGIN_SRC emacs-lisp
+(setq python-shell-interpreter "ipython"
+    python-shell-interpreter-args "--simple-prompt -i")
+#+END_SRC 
+
+** Tramp
+
+#+BEGIN_SRC emacs-lisp
+(setq tramp-default-method "ssh")
+#+END_SRC 
+
+** Winner mode
+
+Revert changes to window configuration
+
+#+BEGIN_SRC emacs-lisp
+(winner-mode t)
+#+END_SRC 
+
+* Key bindings
+  
+** Find files with Helm completion
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c f") 'helm-find-files)
+#+END_SRC
+
+** Preview LaTeX file 
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c p") 'latex-preview-pane-mode)
+#+END_SRC 
+
+** Spell checking
+   
+*** Start checking in the current buffer
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c s") 'flyspell-mode)
+#+END_SRC 
+
+*** Automatically correct last misspelled word
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c a") 'flyspell-auto-correct-previous-word)
+#+END_SRC 
+
+** Web-mode trigger
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c w") 'web-mode)
+#+END_SRC 
+
+* Custom
+
+#+BEGIN_SRC emacs-lisp
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes (quote (tango-dark)))
+ '(helm-mode t)
+ '(package-selected-packages (quote (powerline helm evil-visual-mark-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+#+END_SRC 

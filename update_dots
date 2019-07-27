@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cp -i ./configuration.org ~/.emacs.d/.
+cp -i ./init.el ~/.emacs.d/.
+
