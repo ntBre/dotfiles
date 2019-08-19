@@ -1,0 +1,8 @@
+#!/bin/bash
+
+diff ./configuration.org ~/.emacs.d/configuration.org 
+cp -i ./configuration.org ~/.emacs.d/.
+
+diff ./init.el ~/.emacs.d/init.el 
+cp -i ./init.el ~/.emacs.d/.
+

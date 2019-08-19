@@ -1,5 +1,33 @@
 * Packages
 
+** General
+Enabling packages
+
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . 
+				    "http://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
+
+(setq package-enable-at-startup nil)
+(package-initialize)
+#+END_SRC 
+
+** Use-package
+Enabling use-package
+
+#+BEGIN_SRC emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+#+END_SRC 
+
 ** Company
 
 #+BEGIN_SRC emacs-lisp
@@ -28,16 +56,6 @@
 :ensure t
 :config 
 (add-to-list 'company-backends 'company-web-html))
-#+END_SRC 
-
-*** Company-tern
-
-#+BEGIN_SRC emacs-lisp
-(use-package company-tern
-:ensure t
-:config
-(add-to-list 'company-backends 'company-tern)
-(add-hook 'js2-mode-hook (lambda () (tern-mode) (company-mode))))
 #+END_SRC 
 
 ** Emmet-mode 
@@ -80,22 +98,6 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'python-mode-hook 'flycheck-mode)
 (flycheck-add-mode 'javascript-eslint 'js2-mode))
-#+END_SRC 
-
-** General
-Enabling packages
-
-#+BEGIN_SRC emacs-lisp
-(require 'package)
-
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa-stable" . 
-				    "http://stable.melpa.org/packages/"))
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
-
-(setq package-enable-at-startup nil)
-(package-initialize)
 #+END_SRC 
 
 ** Helm
@@ -277,17 +279,6 @@ Enabling packages
   :ensure t)
 #+END_SRC 
 
-** Use-package
-
-#+BEGIN_SRC emacs-lisp
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-#+END_SRC 
-
 ** Web-mode 
 
 #+BEGIN_SRC emacs-lisp
@@ -306,6 +297,33 @@ Enabling packages
 (yas-global-mode 1)
 #+END_SRC 
 
+** Julia
+   
+*** Julia-mode
+
+#+BEGIN_SRC emacs-lisp
+(use-package julia-mode
+:ensure t)
+#+END_SRC
+
+*** Julia-repl
+    
+[[https://github.com/tpapp/julia-repl][Docs]]
+
+#+BEGIN_SRC emacs-lisp
+(use-package julia-repl
+:ensure t
+:config
+(add-hook 'julia-mode-hook 'julia-repl-mode))
+#+END_SRC
+
+** Gnuplot
+
+#+BEGIN_SRC emacs-lisp
+(use-package gnuplot
+:ensure t)
+#+END_SRC
+
 * Org
 
 ** Bullets
@@ -314,10 +332,37 @@ Enabling packages
 (use-package org-bullets
    :ensure t
    :config 
-(require 'org-bullets)
+   (require 'org-bullets)
 (add-hook 'org-mode-hook 'org-bullets-mode))
 #+END_SRC
+
+** Inline images
+
+#+BEGIN_SRC emacs-lisp
+(setq org-startup-with-inline-images t)
+#+END_SRC
+
+** Extended todo cycle
+
+#+BEGIN_SRC emacs-lisp
+(setq org-todo-keywords
+'((sequence "TODO" "WAITING" "|" "DONE")))
+#+END_SRC
+
+** Todo closing time
+
+#+BEGIN_SRC emacs-lisp
+(setq org-log-done 'time)
+#+END_SRC
    
+** Babel languages
+
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+'org-babel-load-languages
+'((gnuplot . t)))
+#+END_SRC
+
 * Preferences
 
 ** Turn off alarms
@@ -377,6 +422,13 @@ Revert changes to window configuration
 (winner-mode t)
 #+END_SRC 
 
+
+** Save desktop
+
+#+BEGIN_SRC emacs-lisp
+(desktop-save-mode 1)
+#+END_SRC
+
 * Key bindings
   
 ** Find files with Helm completion
@@ -410,6 +462,21 @@ Revert changes to window configuration
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "C-c w") 'web-mode)
 #+END_SRC 
+
+** Org-capture
+   
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c c") 'org-capture)
+#+END_SRC
+
+* Org-capture
+
+#+BEGIN_SRC emacs-lisp
+(setq org-capture-templates
+    '(("r" "Log a run" table-line (file+headline "~/Notes/running.org" "Log")
+        "| | %^{Day?} | %^{Distance?} | %^{Time? (HH:MM:SS)} | | %^{Route?} | %^{Notes | } |")))
+        
+#+END_SRC
 
 * Custom
 
