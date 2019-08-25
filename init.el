@@ -15,7 +15,9 @@
  '(helm-mode t)
  '(package-selected-packages
    (quote
-    (gnuplot org-drill htmlize julia-repl julia-mode powerline helm evil-visual-mark-mode))))
+    (ssh gnuplot org-drill htmlize julia-repl julia-mode powerline helm evil-visual-mark-mode)))
+ '(tramp-default-proxies-alist nil)
+ '(tramp-verbose 6))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -324,6 +324,26 @@ Enabling use-package
 :ensure t)
 #+END_SRC
 
+** SSH
+#+BEGIN_SRC emacs-lisp
+(use-package ssh
+:ensure t
+:config
+(require 'ssh)
+(add-hook 'ssh-mode-hook
+	    (lambda ()
+	    (setq ssh-directory-tracking-mode t)
+	    (shell-dirtrack-mode t)
+	    (setq dirtrackp nil))))
+#+END_SRC
+
+** Tramp
+
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'tramp-default-proxies-alist
+             '("maple" nil "/ssh:r2518@hpcwoods.olemiss.edu:"))
+#+END_SRC
+
 * Org
 
 ** Bullets
