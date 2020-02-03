@@ -11,11 +11,21 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default default default italic underline success warning error])
  '(custom-enabled-themes (quote (tango-dark)))
+ '(evil-search-module (quote evil-search))
  '(helm-mode t)
+ '(line-number-mode nil)
+ '(org-drill-scope (quote file))
+ '(org-modules
+   (quote
+    (org-bbdb org-bibtex org-docview org-gnus org-info org-irc org-mhe org-rmail org-w3m org-drill)))
  '(package-selected-packages
    (quote
-    (gnuplot org-drill htmlize julia-repl julia-mode powerline helm evil-visual-mark-mode))))
+    (company-go flymake-go go-mode org org-plus-contrib org-drill auctex evil-collection pdf-tools htmlize evil-vimish-fold gnuplot julia-repl julia-mode powerline helm evil-visual-mark-mode)))
+ '(projectile-mode t nil (projectile))
+ '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

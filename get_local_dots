@@ -1,8 +1,0 @@
-#!/bin/bash
-
-diff  ~/.emacs.d/configuration.org ./configuration.org
-cp -i  ~/.emacs.d/configuration.org ./configuration.org
-
-diff ~/.emacs.d/init.el ./init.el  
-cp -i ~/.emacs.d/init.el ./init.el 
-

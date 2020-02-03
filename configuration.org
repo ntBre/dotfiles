@@ -34,10 +34,14 @@ Enabling use-package
 (use-package company
     :ensure t
     :config
-    (setq company-idle-delay 0)
+    (setq company-idle-delay 0.5)
     (setq minimum-prefix-length 1)
     (global-company-mode 1)
-    (add-hook 'shell-mode-hook (lambda () ('company-mode -1))))
+    (add-hook 'shell-mode-hook (lambda () (company-mode -1)))
+    (require 'company-go)
+    (add-to-list 'company-backends 'company-go)
+    (add-hook 'go-mode-hook (lambda () (setq company-idle-delay 0)))
+)
 #+END_SRC 
 
 *** Company-jedi
@@ -73,10 +77,21 @@ Enabling use-package
 ** Evil mode 
 
 #+BEGIN_SRC emacs-lisp
+(setq evil-want-keybinding nil)
 (require 'evil)
 (evil-mode t)
 (setq evil-search-module 'evil-search)
 #+END_SRC 
+
+** Evil collection
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil-collection
+:ensure t
+:config
+(evil-collection-init)
+(setq evil-want-keybinding nil))
+#+END_SRC
 
 ** Evil surround
 
@@ -97,6 +112,7 @@ Enabling use-package
 :config
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'python-mode-hook 'flycheck-mode)
+(add-hook 'go-mode-hook 'flycheck-mode)
 (flycheck-add-mode 'javascript-eslint 'js2-mode))
 #+END_SRC 
 
@@ -104,7 +120,11 @@ Enabling use-package
 
 #+BEGIN_SRC emacs-lisp
 (use-package helm
-  :ensure t)
+  :ensure t
+  :bind*
+  (:map helm-map
+        ([tab] . helm-next-line)
+        ([backtab] . helm-previous-line)))
 (helm-mode 1)
 (add-hook 'shell-mode-hook 'helm-mode 0)
 #+END_SRC 
@@ -114,8 +134,7 @@ Enabling use-package
 #+BEGIN_SRC emacs-lisp
 (use-package hungry-delete
 :ensure t
-:config
-(global-hungry-delete-mode))
+)
 #+END_SRC 
 
 ** js2-mode
@@ -129,13 +148,15 @@ Enabling use-package
 #+END_SRC 
 
 ** Latex-preview-pane
-
 #+BEGIN_SRC emacs-lisp
+(add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+#+END_SRC 
+
+
 (use-package latex-preview-pane
 :ensure t
 :config
 (latex-preview-pane-enable))
-#+END_SRC 
 
 ** Linum
 
@@ -143,10 +164,12 @@ Enabling use-package
   (use-package linum-relative 
   :ensure t
   :config 
-  (linum-on)
-  (linum-relative-global-mode)
   (setq linum-relative-current-symbol "")
-  (add-hook 'eshell-mode-hook 'linum-mode nil))
+  (add-hook 'tex-mode-hook 'linum-relative-mode)
+  (add-hook 'org-mode-hook 'linum-relative-mode)
+  (add-hook 'python-mode-hook 'linum-relative-mode)
+  (add-hook 'go-mode-hook 'linum-relative-mode)
+  (add-hook 'julia-mode-hook 'linum-relative-mode))
 #+END_SRC 
 
 ** Magit
@@ -324,6 +347,40 @@ Enabling use-package
 :ensure t)
 #+END_SRC
 
+** evil-vimish-fold
+
+#+BEGIN_SRC emacs-lisp
+(use-package evil-vimish-fold
+:ensure t
+:config
+(evil-vimish-fold-mode 1))
+#+END_SRC 
+
+** pdf-tools
+
+#+BEGIN_SRC emacs-lisp
+(use-package pdf-tools
+:ensure t
+:config
+(add-hook 'doc-view-mode-hook 'pdf-view-mode)
+(setq-default pdf-view-display-size 'fit-page)
+(setq pdf-annot-activate-created-annotations t)
+)
+#+END_SRC 
+
+** Go-lang
+
+#+BEGIN_SRC emacs-lisp
+(use-package go-mode
+:ensure t)
+
+(use-package flymake-go
+:ensure t)
+
+(use-package company-go
+:ensure t)
+#+END_SRC
+
 * Org
 
 ** Bullets
@@ -358,10 +415,20 @@ Enabling use-package
 ** Babel languages
 
 #+BEGIN_SRC emacs-lisp
+(require 'ob-python)
 (org-babel-do-load-languages
 'org-babel-load-languages
-'((gnuplot . t)))
+'((gnuplot . t)
+  (python . t)
+  (shell . t)))
 #+END_SRC
+
+** Org-drill
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-drill
+:ensure org-plus-contrib)
+#+END_SRC 
 
 * Preferences
 
@@ -429,6 +496,13 @@ Revert changes to window configuration
 (desktop-save-mode 1)
 #+END_SRC
 
+** Tool bar
+
+#+BEGIN_SRC emacs-lisp
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+#+END_SRC 
+
 * Key bindings
   
 ** Find files with Helm completion
@@ -469,12 +543,19 @@ Revert changes to window configuration
 (global-set-key (kbd "C-c c") 'org-capture)
 #+END_SRC
 
+** Line numbering
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-c l") 'linum-mode)
+#+END_SRC 
+
 * Org-capture
 
 #+BEGIN_SRC emacs-lisp
 (setq org-capture-templates
     '(("r" "Log a run" table-line (file+headline "~/Notes/running.org" "Log")
-        "| | %^{Day?} | %^{Distance?} | %^{Time? (HH:MM:SS)} | | %^{Route?} | %^{Notes | } |")))
+        "| | %^{Day?} | %^{Distance?} | %^{Time? (HH:MM:SS)} | | %^{Route?} | %^{Notes | } |")
+      ("l" "Add a library entry" entry (file "~/School/Library/library.org")
+          "** [[file:~/School/Library/%^{Filename?}.pdf][%\\1]]")))
         
 #+END_SRC
 
